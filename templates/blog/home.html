@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+</head>
+<body>
+    {% for post in posts %}
+        <p><a href="{% url 'post' post.slug%}">{{post.title}}</a></p>
+    {% endfor %}
+</body>
+</html>
