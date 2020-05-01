@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from django.shortcuts import render
 from django.views.generic.base import View
 
@@ -7,19 +9,19 @@ from .models import Category, Post
 class HomeView(View):
     """Home page"""
     def get(self, request):
-        post_list = Post.objects.all()
-        return render(request, "blog/home.html", {"posts": post_list})
+        category_list = Category.objects.all()
+        post_list = Post.objects.filter(published_date__lte=datetime.now(), published=True)
+        return render(request, "blog/post_list.html", {"categories": category_list, "post_list": post_list})
 
-
+class PostDetailView(View):
+    """Displaying Full Article"""
+    def get(self, request, category, slug):
+        category_list = Category.objects.all()
+        post = Post.objects.get(slug=slug)
+        return render(request, "blog/post_detail.html", {"categories": category_list, "post": post})  
+    
 class CategoryView(View):
     """Displaying Category Articles"""
     def get(self, request, category_name):
-        category = Category.objects.get(slug = category_name)
-        return render(request, "blog/post_list.html", {"category": category})
-    
-
-class PostView(View):
-    """Displaying Posts"""
-    def get(self, request, post_id):
-        post = Post.objects.get(slug = post_id)
-        return render(request, "blog/post.html", {"post": post})
+        category = Category.objects.get(slug=category_name)
+        return render(request, "blog/post_list.html", {"category": category})   
